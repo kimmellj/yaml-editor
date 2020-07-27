@@ -1,13 +1,14 @@
 {
-  "name": "webpack-boilerplate",
+  "name": "yaml-editor",
   "version": "1.0.0",
-  "description": "Webpack 4 Boilerplate",
+  "description": "YAML Editor",
   "main": "index.js",
-  "author": "Tania Rascia <tania@taniarascia.com>",
+  "author": "Jamie Kimmell <kimmellj@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js",
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
+    "publish": "rm -fR ./docs ./dist && npm run build && cp -R ./dist ./docs",
     "lint": "eslint ."
   },
   "keywords": [
