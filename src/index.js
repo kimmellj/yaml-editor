@@ -1,40 +1,49 @@
-/* globals CodeMirror, document, window */
+/* global self, document */
+import * as monaco from 'monaco-editor';
 
-'use strict';
-
-import './js/CodeMirror';
-import './styles/index.scss';
-
-CodeMirror.height = '100%';
-
-const code = document.getElementById('code');
-
-const editor = CodeMirror.fromTextArea(code, {
-    lineNumbers: true,
-    theme      : 'material-darker',
-    mode       : 'text/x-yaml',
-    gutters    : ['CodeMirror-lint-markers'],
-    lint       : {
-        'onUpdateLinting': (param) => {
-            const codeMirror = document.getElementsByClassName('CodeMirror')[0];
-
-            if (param.length > 0) {
-                codeMirror.classList.add('error');
-            } else {
-                codeMirror.classList.remove('error');
-            }
+self.MonacoEnvironment = {
+    getWorkerUrl: function (moduleId, label) {
+        if (label === 'json') {
+            return './json.worker.bundle.js';
         }
+
+        if (label === 'css') {
+            return './css.worker.bundle.js';
+        }
+
+        if (label === 'html') {
+            return './html.worker.bundle.js';
+        }
+
+        if (label === 'typescript' || label === 'javascript') {
+            return './ts.worker.bundle.js';
+        }
+
+        return './editor.worker.bundle.js';
     }
+};
+
+monaco.editor.create(document.getElementById('container'), {
+    renderValidationDecorations: 'on',
+    value                      : `--- 
+ doe: "a deer, a female deer"
+ ray: "a drop of golden sun"
+ pi: 3.14159
+ xmas: true
+ french-hens: 3
+ calling-birds: 
+   - huey
+   - dewey
+   - louie
+   - fred
+ xmas-fifth-day: 
+   calling-birds: four
+   french-hens: 3
+   golden-rings: 5
+   partridges: 
+     count: 1
+     location: "a pear tree"
+   turtle-doves: two
+    `,
+    language: 'yaml '
 });
-
-editor.on('change', (codeMirror) => {
-    window.localStorage.setItem('yaml-editor-code', codeMirror.getValue());
-
-    return true;
-});
-
-const codeValue = window.localStorage.getItem('yaml-editor-code');
-
-if (codeValue) {
-    editor.setValue(codeValue);
-}
